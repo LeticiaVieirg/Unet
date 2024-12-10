@@ -9,7 +9,7 @@ def conv_block (inputs, num_filters):
     x=BatchNormalization()(x) #input ocult
     x=Activation("relu")(x)
 
-    x=Conv2D(num_filters, 3, padding="same")(inputs) #receive num filters, kernel 3x3 and same padding
+    x=Conv2D(num_filters, 3, padding="same")(x) 
     x=BatchNormalization()(x) #input ocult
     x=Activation("relu")(x)
 
@@ -19,11 +19,12 @@ def conv_block (inputs, num_filters):
 def enconder_block(inputs, num_filters):
     x=conv_block(inputs, num_filters)
     p=MaxPool2D((2,2))(x)
+    return x,p
 
 
 #step 2x2 doble the recurse resolution and same 
 def decoder_block(inputs, skip_feartures, num_filters):
-    x=Conv2DTrasnpose(num_filters, (2,2), striders=2, padding="same")(inputs)
+    x=Conv2DTranspose(num_filters, (2,2), strides=2, padding="same")(inputs)
     x=Concatenate()([x, skip_feartures])
     x=conv_block(x, num_filters)
 
@@ -59,4 +60,4 @@ def build_unet(input_shape):
 if __name__=="__main__":
     input_shape=(512,512,3)
     model=build_unet(input_shape)
-    model.sumary()
+    model.summary()
